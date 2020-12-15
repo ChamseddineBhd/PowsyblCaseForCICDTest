@@ -18,6 +18,14 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+
       - name: Build with Maven
         run: mvn --batch-mode -Pjacoco install
 
@@ -26,6 +34,6 @@ jobs:
         run: >
           mvn --batch-mode deploy -DskipTests -Dmaven.install.skip -Dmaven.deploy.skip -Dpowsybl.docker.deploy
           -Djib.httpTimeout=60000
-          -Djib.to.image=docker.io/powsybl/case-server
-          -Djib.to.auth.username=powsyblci
+          -Djib.to.image=docker.io/chmits/powsybl-case-server-test-ci
+          -Djib.to.auth.username=chmits
           -Djib.to.auth.password=${{ secrets.DOCKERHUB_TOKEN }}
