@@ -30,10 +30,9 @@ jobs:
         run: mvn --batch-mode -Pjacoco install
 
       - name: Build Docker image
-        if: github.ref == 'refs/heads/master'
         run: >
           mvn --batch-mode deploy -DskipTests -Dmaven.install.skip -Dmaven.deploy.skip -Dpowsybl.docker.deploy
           -Djib.httpTimeout=60000
-          -Djib.to.image=docker.io/chmits/powsybl-case-server-test-ci
+          -Djib.to.image=docker.io/chmits/powsybl-case-server-test-ci:$RELEASE_VERSION
           -Djib.to.auth.username=chmits
           -Djib.to.auth.password=${{ secrets.DOCKERHUB_TOKEN }}
